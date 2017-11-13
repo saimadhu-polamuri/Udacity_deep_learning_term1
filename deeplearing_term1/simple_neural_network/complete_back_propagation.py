@@ -71,24 +71,24 @@ def main():
             # Calculate the network's prediction error
             error = y - output
 
-            # TODO: Calculate error term for the output unit
-            output_error_term = error * output_layer_input * (1 - output_layer_input)
+            # Calculate error term for the output unit
+            output_error_term = error * output * (1 - output)
 
             ## propagate errors to hidden layer
 
-            # TODO: Calculate the hidden layer's contribution to the error
-            hidden_error = None
+            # Calculate the hidden layer's contribution to the error
+            hidden_error = np.dot(output_error_term, weights_hidden_output)
 
-            # TODO: Calculate the error term for the hidden layer
-            hidden_error_term = None
+            # Calculate the error term for the hidden layer
+            hidden_error_term = hidden_error * hidden_output * (1 - hidden_output)
 
-            # TODO: Update the change in weights
-            del_w_hidden_output += 0
-            del_w_input_hidden += 0
+            # Update the change in weights
+            del_w_hidden_output += output_error_term * hidden_output
+            del_w_input_hidden += hidden_error_term * x[:, None]
 
-        # TODO: Update weights
-        weights_input_hidden += 0
-        weights_hidden_output += 0
+        # Update weights
+        weights_input_hidden += (learning_rate * del_w_input_hidden) / float(n_records)
+        weights_hidden_output += (learning_rate * del_w_hidden_output) / float(n_records)
 
         # Printing out the mean square error on the training set
         if e % (epochs / 10) == 0:
